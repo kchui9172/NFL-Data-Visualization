@@ -355,30 +355,36 @@ function handleKeyDown(event){
   if (String.fromCharCode(event.keyCode) == "I"){
     view_matrix = mult(translate(0,0,1),view_matrix);
   }
+  //move left
+  else if (String.fromCharCode(event.keyCode) == "J"){
+    view_matrix = mult(translate(1,0,0),view_matrix);
+  }
+  //move right
+  else if (String.fromCharCode(event.keyCode) == "K"){
+    view_matrix = mult(translate(-1,0,0),view_matrix);
+  }
   //move back
-  else if (String.fromCharCode(event.keyCode) == "O"){
+  else if (String.fromCharCode(event.keyCode) == "M"){
     view_matrix = mult(translate(0,0,-1),view_matrix);
   }
-  //reset to original view 
+  //turn rotation on or off
   else if (String.fromCharCode(event.keyCode) == "R"){
-    /*fov = 50;
-    proj_matrix = perspective(fov,canvas.width/canvas.height,1, 100);
-    view_matrix = translate(0,0,-50);
-    crosshairMatrix = view_matrix;*/
-
-    //start rotation
     rotateCubes = !rotateCubes;
     console.log(rotateCubes);
   }
-
-  /*-------------FIELD ADJUSTMENT-------------------*/
-  else if (String.fromCharCode(event.keyCode) == "N"){
-    fov -= 1;
-    proj_matrix = perspective(fov,canvas.width/canvas.height,1, 100);
+  //reset to original view 
+  else if (String.fromCharCode(event.keyCode) == "S"){
+	fov = 50;
+	proj_matrix = perspective(fov,canvas.width/canvas.height,1, 100);
+	view_matrix = translate(0,0,-50);	
   }
-  else if (String.fromCharCode(event.keyCode) == "W"){
-    fov += 1;
-    proj_matrix = perspective(fov,canvas.width/canvas.height,1, 100);
+  //move up
+  else if (event.keyCode == '38'){
+    view_matrix = mult(view_matrix, translate(0,-.25,0));
+  }
+  //move down
+  else if (event.keyCode == '40'){
+    view_matrix = mult(view_matrix, translate(0,.25,0));
   }
   else{
     return;
@@ -420,18 +426,7 @@ function animate(time){
 
        //Loop through each cube
       for (var i = 0; i < 32; i++){    
-        /*----------- Draw cube ----------------*/  
-
-        //set color of cube binding to specific color array of each cube 
-        /*var cubeColor_buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, cubeColor_buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cubeColor[i]), gl.STATIC_DRAW);
-        gl.bindBuffer(gl.ARRAY_BUFFER, cubeColor_buffer);
-        var _color = gl.getAttribLocation(program, "color");
-        gl.vertexAttribPointer(_color, 3, gl.FLOAT, false,0,0) ;
-        gl.enableVertexAttribArray(_color);*/
-
-        //move cube to fit +/-10 vertices positions 
+        /*----------- Draw cube ----------------*/ 
         var trans = translate(xMove[i],yMove[i],zMove[i]);
 
         //rotate cubes
@@ -455,35 +450,12 @@ function animate(time){
         }
 
 
-        /*----------- Set rotation matrix ----------------*/
-        /*var currTime = new Date().getTime();
-        //Find time that has passed since last rendering
-        var progress = currTime - prevTime;
-        prevTime = currTime;
-
-        //calculate number of degrees to rotate since last rendering
-        var degreesRotated = progress * 0.12;
-        rotDeg = degreesRotated + prevRot;
-
-        var rotX = rotateX(degreesRotated);
-        var rotY = rotateY(degreesRotated);
-        var rotateMatrix = mult(rotate(prevRot,[xAxis[i],yAxis[i],zAxis[i]]),mult(rotX,rotY));
-        prevRot = rotDeg;*/
-
-        /*----------- Set scaling matrix ----------------*/
-        /*var scale = scalem(scaleValue[i], scaleValue[i], scaleValue[i]);
-
-        //if reach one of the boundary sizes (only grow +/- 20%)
-        if (scaleValue[i] <= 0.8 || scaleValue[i] >= 1.2){
-          scaleStep[i] = -1 * scaleStep[i];
-        }
-
-        scaleValue[i] += scaleStep[i];*/
+      
 
         //Set model matrix to be product of translation, scaling, and rotation 
         mo_matrix = mat4();
         mo_matrix = mult(mo_matrix, trans);
-        //mo_matrix = mult(mo_matrix, scale);
+
         if (rotateCubes){
           mo_matrix = mult(mo_matrix, rotateMatrix);  
         }

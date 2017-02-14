@@ -15,22 +15,17 @@
          uniform sampler2D uSampler;
 
          varying highp vec2 vTextureCoord;
-
-         //NEW
          varying vec3 v_normal;
          varying vec3 v_surfaceToLight;
 
-         //varying vec3 vColor;
          void main(void) {
-           //gl_FragColor = vec4(vColor, 1.0);
-           highp vec4 texelColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-           gl_FragColor = vec4(texelColor.rgb, texelColor.a);
+			highp vec4 texelColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+			gl_FragColor = vec4(texelColor.rgb, texelColor.a);
 
-           //NEW
-            vec3 normal = normalize(v_normal);
-            vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
-            float light = dot(normal, surfaceToLightDirection);
-            gl_FragColor.rgb *= light;
+			vec3 normal = normalize(v_normal);
+			vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+			float light = dot(normal, surfaceToLightDirection);
+			gl_FragColor.rgb *= light;
          }
       </script>
 
@@ -39,44 +34,24 @@
          uniform mat4 Pmatrix;
          uniform mat4 Vmatrix;
          uniform mat4 Mmatrix;
-
-         //NEW
          uniform mat3 normalMatrix;
-         //uniform highp vec3 directionalVector;
-
        
          attribute vec3 color;
          attribute vec3 position;
          attribute highp vec2 aTextureCoord;
-
-         //NEW
          attribute highp vec3 normal;
 
-         //varying vec3 vColor;
          varying highp vec2 vTextureCoord;
-
-         //NEW
          varying vec3 v_normal;
          varying vec3 v_surfaceToLight;
 
 
          void main(void) {
             gl_Position =  Pmatrix * Vmatrix * Mmatrix * vec4(position, 1.0);
-            //vColor = color;
             vTextureCoord = aTextureCoord;
 
-            //NEW - apply lighitng
-            //highp vec3 ambientLight = vec3(0.6,0.6,0.6);
-            //highp vec3 directionalLightColor = vec3(0.0,0.5,0.75);
-            //highp vec3 directionalLightColor = vec3(0.85,0.8,0.75);
-            //highp vec3 directionalVector = vec3(0.85, 0.8, 0.75);
-            //highp vec3 directionalVector = vec3(1,1,-.25);
-            //highp vec3 directionalVector = vec3 (.1,2,-.1);
-            //highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
-            //vLighting = ambientLight + (directionalLightColor * directional);
-
             v_normal = normalMatrix * normal;
-            // compute the world position of the surfoace
+            // compute the world position of the surface
             vec3 surfaceWorldPosition = (Mmatrix * vec4(position,1.0)).xyz;
 
             // compute the vector of the surface to the light
