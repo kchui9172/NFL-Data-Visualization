@@ -27,22 +27,420 @@ var rotateCubes;
 var fov;
 
 //Preset translation, scale, and rotation axis for each cube 
-var xMove = [-20,-15,-10,-5,5,10,15,20,-20,-15,-10,-5,5,10,15,20,-20,-15,-10,-5,5,10,15,20,-20,-15,-10,-5,5,10,15,20]
-var yMove = [10,10,10,10,10,10,10,10,5,5,5,5,5,5,5,5,-5,-5,-5,-5,-5,-5,-5,-5,-10,-10,-10,-10,-10,-10,-10,-10];
+var xMove = [-40,-30,-20,-10,10,20,30, 40,-40,-30,-20,-10,10,20,30, 40,-40,-30,-20,-10,10,20,30, 40,-40,-30,-20,-10,10,20,30, 40];
+var yMove = [20,20,20,20,20,20,20,20,10,10,10,10,10,10,10,10,-10,-10,-10,-10,-10,-10,-10,-10,-20,-20,-20,-20,-20,-20,-20,-20];
 var zMove = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
-var xAxis = [0,0];
-var yAxis = [1,1];
-var zAxis = [0,0];
+var scaleVals = new Array(32);
 
 var prevTime = 0;
 var prevRot = 0;
+
+var teamNames = ["Arizona Cardinals","Atlanta Falcons","Baltimore Ravens", "Buffalo Bills",
+"Carolina Panthers", "Chicago Bears", "Cincinnati Bengals", "Cleveland Browns","Dallas Cowboys",
+"Denver Broncos", "Detroit Lions", "Green Bay Packers", "Houston Texans", "Indianapolis Colts",
+"Jacksonville Jaguars","Kansas City Chiefs","Miami Dolphins", "Minnesota Vikings",
+"New England Patriots", "New Orleans Saints", "New York Giants", "New York Jets", "Oakland Raiders",
+"Philadelphia Eagles","Pittsburgh Steelers","San Diego Chargers","San Francisco 49ers","Seattle Seahawks",
+"St. Louis Rams", "Tampa Bay Buccaneers","Tennessee Titans", "Washington Redskins"];
+
+var data ={
+   "Seattle Seahawks": {
+      "RNK": 3,
+      "BNG": 3,
+      "FRL": 11,
+      "OWN": 5,
+      "AFF": 69,
+      "STX": 13,
+      "PLA": 3,
+      "CCH": 5,
+      "TTR": 8,
+      "NUM": 20
+   },
+   "Green Bay Packers": {
+      "RNK": 8,
+      "BNG": 55,
+      "FRL": 7,
+      "OWN": 4,
+      "AFF": 20,
+      "STX": 3,
+      "PLA": 9,
+      "CCH": 25,
+      "TTR": 2,
+      "NUM": 24
+   },
+   "Indianapolis Colts": {
+      "RNK": 13,
+      "BNG": 19,
+      "FRL": 25,
+      "OWN": 57,
+      "AFF": 36,
+      "STX": 17,
+      "PLA": 15,
+      "CCH": 21,
+      "TTR": 19,
+      "NUM": 14
+   },
+   "New Orleans Saints": {
+      "RNK": 14,
+      "BNG": 29,
+      "FRL": 22,
+      "OWN": 24,
+      "AFF": 38,
+      "STX": 38,
+      "PLA": 13,
+      "CCH": 4,
+      "TTR": 10,
+      "NUM": 30
+   },
+   "Denver Broncos": {
+      "RNK": 17,
+      "BNG": 5,
+      "FRL": 53,
+      "OWN": 19,
+      "AFF": 73,
+      "STX": 57,
+      "PLA": 27,
+      "CCH": 43,
+      "TTR": 30,
+      "NUM": 6
+   },
+   "Carolina Panthers": {
+      "RNK": 26,
+      "BNG": 4,
+      "FRL": 58,
+      "OWN": 62,
+      "AFF": 56,
+      "STX": 78,
+      "PLA": 43,
+      "CCH": 51,
+      "TTR": 57,
+      "NUM": 31
+   },
+   "San Francisco 49ers": {
+      "RNK": 27,
+      "BNG": 10,
+      "FRL": 76,
+      "OWN": 36,
+      "AFF": 86,
+      "STX": 59,
+      "PLA": 19,
+      "CCH": 8,
+      "TTR": 26,
+      "NUM": 23
+   },
+   "Baltimore Ravens": {
+      "RNK": 36,
+      "BNG": 63,
+      "FRL": 57,
+      "OWN": 11,
+      "AFF": 48,
+      "STX": 33,
+      "PLA": 26,
+      "CCH": 19,
+      "TTR": 5,
+      "NUM": 9
+   },
+   "Pittsburgh Steelers": {
+      "RNK": 38,
+      "BNG": 69,
+      "FRL": 37,
+      "OWN": 7,
+      "AFF": 49,
+      "STX": 56,
+      "PLA": 30,
+      "CCH": 36,
+      "TTR": 8,
+      "NUM": 8
+   },
+   "New England Patriots": {
+      "RNK": 43,
+      "BNG": 44,
+      "FRL": 51,
+      "OWN": 31,
+      "AFF": 99,
+      "STX": 61,
+      "PLA": 16,
+      "CCH": 2,
+      "TTR": 17,
+      "NUM": 0
+   },
+   "Jacksonville Jaguars": {
+      "RNK": 44,
+      "BNG": 113,
+      "FRL": 24,
+      "OWN": 28,
+      "AFF": 2,
+      "STX": 19,
+      "PLA": 47,
+      "CCH": 12,
+      "TTR": 60,
+      "NUM": 15
+   },
+   "Kansas City Chiefs": {
+      "RNK": 56,
+      "BNG": 30,
+      "FRL": 79,
+      "OWN": 47,
+      "AFF": 70,
+      "STX": 49,
+      "PLA": 65,
+      "CCH": 24,
+      "TTR": 86,
+      "NUM": 4
+   },
+   "Arizona Cardinals": {
+      "RNK": 58,
+      "BNG": 40,
+      "FRL": 85,
+      "OWN": 68,
+      "AFF": 57,
+      "STX": 63,
+      "PLA": 54,
+      "CCH": 27,
+      "TTR": 73,
+      "NUM": 21
+   },
+   "Atlanta Falcons": {
+      "RNK": 67,
+      "BNG": 82,
+      "FRL": 67,
+      "OWN": 33,
+      "AFF": 66,
+      "STX": 95,
+      "PLA": 69,
+      "CCH": 60,
+      "TTR": 70,
+      "NUM": 28
+   },
+   "Philadelphia Eagles": {
+      "RNK": 69,
+      "BNG": 67,
+      "FRL": 77,
+      "OWN": 55,
+      "AFF": 93,
+      "STX": 89,
+      "PLA": 58,
+      "CCH": 29,
+      "TTR": 77,
+      "NUM": 19
+   },
+   "Houston Texans": {
+      "RNK": 72,
+      "BNG": 108,
+      "FRL": 48,
+      "OWN": 38,
+      "AFF": 89,
+      "STX": 55,
+      "PLA": 57,
+      "CCH": 77,
+      "TTR": 69,
+      "NUM": 12
+   },
+   "Chicago Bears": {
+      "RNK": 77,
+      "BNG": 81,
+      "FRL": 78,
+      "OWN": 58,
+      "AFF": 108,
+      "STX": 98,
+      "PLA": 56,
+      "CCH": 53,
+      "TTR": 49,
+      "NUM": 27
+   },
+   "New York Giants": {
+      "RNK": 79,
+      "BNG": 94,
+      "FRL": 82,
+      "OWN": 34,
+      "AFF": 113,
+      "STX": 101,
+      "PLA": 71,
+      "CCH": 23,
+      "TTR": 15,
+      "NUM": 17
+   },
+   "Buffalo Bills": {
+      "RNK": 82,
+      "BNG": 68,
+      "FRL": 92,
+      "OWN": 96,
+      "AFF": 12,
+      "STX": 106,
+      "PLA": 86,
+      "CCH": 77,
+      "TTR": 102,
+      "NUM": 2
+   },
+   "Tampa Bay Buccaneers": {
+      "RNK": 84,
+      "BNG": 92,
+      "FRL": 100,
+      "OWN": 82,
+      "AFF": 79,
+      "STX": 86,
+      "PLA": 95,
+      "CCH": 41,
+      "TTR": 37,
+      "NUM": 29
+   },
+   "St. Louis Rams": {
+      "RNK": 88,
+      "BNG": 73,
+      "FRL": 96,
+      "OWN": 113,
+      "AFF": 74,
+      "STX": 116,
+      "PLA": 84,
+      "CCH": 32,
+      "TTR": 40,
+      "NUM": 22
+   },
+   "Cincinnati Bengals": {
+      "RNK": 99,
+      "BNG": 15,
+      "FRL": 118,
+      "OWN": 110,
+      "AFF": 91,
+      "STX": 110,
+      "PLA": 88,
+      "CCH": 95,
+      "TTR": 110,
+      "NUM": 10
+   },
+   "San Diego Chargers": {
+      "RNK": 100,
+      "BNG": 47,
+      "FRL": 95,
+      "OWN": 106,
+      "AFF": 102,
+      "STX": 120,
+      "PLA": 77,
+      "CCH": 56,
+      "TTR": 90,
+      "NUM": 7
+   },
+   "Minnesota Vikings": {
+      "RNK": 103,
+      "BNG": 84,
+      "FRL": 101,
+      "OWN": 85,
+      "AFF": 88,
+      "STX": 113,
+      "PLA": 79,
+      "CCH": 67,
+      "TTR": 102,
+      "NUM": 26
+   },
+   "Tennessee Titans": {
+      "RNK": 104,
+      "BNG": 61,
+      "FRL": 108,
+      "OWN": 102,
+      "AFF": 78,
+      "STX": 103,
+      "PLA": 106,
+      "CCH": 83,
+      "TTR": 98,
+      "NUM": 13
+   },
+   "Dallas Cowboys": {
+      "RNK": 107,
+      "BNG": 100,
+      "FRL": 109,
+      "OWN": 92,
+      "AFF": 112,
+      "STX": 69,
+      "PLA": 108,
+      "CCH": 112,
+      "TTR": 48,
+      "NUM": 16
+   },
+   "Miami Dolphins": {
+      "RNK": 108,
+      "BNG": 53,
+      "FRL": 121,
+      "OWN": 99,
+      "AFF": 94,
+      "STX": 111,
+      "PLA": 112,
+      "CCH": 107,
+      "TTR": 90,
+      "NUM": 1
+   },
+   "Washington Redskins": {
+      "RNK": 109,
+      "BNG": 116,
+      "FRL": 105,
+      "OWN": 88,
+      "AFF": 111,
+      "STX": 112,
+      "PLA": 96,
+      "CCH": 99,
+      "TTR": 54,
+      "NUM": 18
+   },
+   "Cleveland Browns": {
+      "RNK": 110,
+      "BNG": 95,
+      "FRL": 115,
+      "OWN": 111,
+      "AFF": 72,
+      "STX": 104,
+      "PLA": 104,
+      "CCH": 96,
+      "TTR": 111,
+      "NUM": 11
+   },
+   "Detroit Lions": {
+      "RNK": 111,
+      "BNG": 70,
+      "FRL": 120,
+      "OWN": 84,
+      "AFF": 98,
+      "STX": 97,
+      "PLA": 113,
+      "CCH": 100,
+      "TTR": 120,
+      "NUM": 25
+   },
+   "New York Jets": {
+      "RNK": 113,
+      "BNG": 97,
+      "FRL": 110,
+      "OWN": 93,
+      "AFF": 117,
+      "STX": 105,
+      "PLA": 100,
+      "CCH": 44,
+      "TTR": 105,
+      "NUM": 4
+   },
+   "Oakland Raiders": {
+      "RNK": 119,
+      "BNG": 109,
+      "FRL": 111,
+      "OWN": 115,
+      "AFF": 83,
+      "STX": 121,
+      "PLA": 114,
+      "CCH": 109,
+      "TTR": 56,
+      "NUM": 5
+   }
+};
+
+var ranking = new Array(32);
+var sortedTeams = new Array(32);
 
 window.onload = function init(){
   //create a canvas
   canvas = document.getElementById('my_Canvas');
   gl = canvas.getContext('experimental-webgl');
   if ( !gl ) { alert( "WebGL isn't available" ); }
+
+  processData();
 
   //set buffers
   initializeBuffers();
@@ -58,13 +456,43 @@ window.onload = function init(){
   //Initial Matrices
   fov = 50;
   proj_matrix = perspective(fov,canvas.width/canvas.height,1, 100);
-  view_matrix = translate(0,0,-50);
+  view_matrix = translate(0,0,-60);
 
   //Handle keyboard inputs 
   document.onkeydown = handleKeyDown;
   document.onkeyup = handleKeyUp;
   render(); 
 }
+
+function processData(){
+  for (var i = 0; i < 32; i++){
+  	var team = teamNames[i];
+  	ranking[parseInt(data[team]["NUM"])] = parseInt(data[team]["RNK"]);
+  }
+  console.log("ranking: ",ranking);
+
+//sort 
+var initValue = 4.2;
+  for (var j = 0; j < 32; j++){
+	var index = 0;
+	var value = ranking[0];
+	for (var i = 1; i < ranking.length; i++) {
+		if (ranking[i] < value) {
+			value = ranking[i];
+			index = i;
+		}
+	}
+	ranking[index] = 100000;
+	sortedTeams[j] = index;
+	scaleVals[j] = initValue;
+	initValue -= .1;
+  }
+
+  console.log("sorted:",sortedTeams);
+  console.log(scaleVals);
+
+}
+
 
 //Function to initialize shaders 
 function initializeShaders(){
@@ -601,9 +1029,12 @@ function animate(time){
           prevRot = rotDeg;
         }
 
-        //Set model matrix to be product of translation, scaling, and rotation 
         mo_matrix = mat4();
+
+        //Set model matrix to be product of translation, scaling, and rotation 
         mo_matrix = mult(mo_matrix, trans);
+
+        mo_matrix = mult(mo_matrix, scalem(scaleVals[i],scaleVals[i],scaleVals[i]));
 
         if (rotateCubes){
           mo_matrix = mult(mo_matrix, rotateMatrix);  
