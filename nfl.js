@@ -275,7 +275,7 @@ var textures = [];
 var images = [];
 
 
-/*function createImages(){
+function createImages(){
   console.log("what");
   for (var i = 0; i <2 ;i++){
     var im = new Image();
@@ -285,58 +285,210 @@ var images = [];
     }
     im.src = imageFiles[i];
   }
-}*/
+}
 
 
 function initializeTextures(){
+  //AFC East
+  t1 = gl.createTexture();
+  i1 = new Image();
+  i1.onload = function() { handleTextureLoaded(i1, t1); }
+  i1.src = "patriots.jpg";
+  textures.push(t1);
 
-  /*for (var i = 0; i <2; i++){
-    textures[i] = gl.createTexture();
-    image = new Image();
-    image.onload = function(){
-      //handleTextureLoaded(textures[i].image, textures[i]);
-      gl.bindTexture(gl.TEXTURE_2D, textures[i]);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-      gl.bindTexture(gl.TEXTURE_2D,null);
-    }
-    image.src = imageFiles[i];
-  }*/
+  t2 = gl.createTexture();
+  i2 = new Image();
+  i2.onload = function() { handleTextureLoaded(i2, t2); }
+  i2.src = "dolphins.jpg";
+  textures.push(t2);
 
-  /*createImages();
+  t3 = gl.createTexture();
+  i3 = new Image();
+  i3.onload = function() { handleTextureLoaded(i3, t3); }
+  i3.src = "bills.png";
+  textures.push(t3);
 
-  for (var ii = 0; ii < 2; ++ii) {
-    var texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, texture);
- 
-    // Set the parameters so we can render any size image.
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
- 
-    // Upload the image into the texture.
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, images[ii]);
- 
-    // add the texture to the array of textures.
-    textures.push(texture);
-  }*/
+  t4 = gl.createTexture();
+  i4 = new Image();
+  i4.onload = function() { handleTextureLoaded(i4, t4); }
+  i4.src = "jets.png";
+  textures.push(t4);
 
+  //AFC West
+  t5 = gl.createTexture();
+  i5 = new Image();
+  i5.onload = function() { handleTextureLoaded(i5, t5); }
+  i5.src = "chiefs.jpg";
+  textures.push(t5);
 
-  cube1Texture = gl.createTexture();
-  cube1Image = new Image();
-  cube1Image.onload = function() { handleTextureLoaded(cube1Image, cube1Texture); }
-  cube1Image.src = "texans.jpg";
+  t6 = gl.createTexture();
+  i6 = new Image();
+  i6.onload = function() { handleTextureLoaded(i6, t6); }
+  i6.src = "raiders.jpeg";
+  textures.push(t6);
 
-  cube2Texture = gl.createTexture();
-  cube2Image = new Image();
-  cube2Image.onload = function() { handleTextureLoaded(cube2Image, cube2Texture); }
-  cube2Image.src ="vikings.jpg";
+  t7 = gl.createTexture();
+  i7 = new Image();
+  i7.onload = function() { handleTextureLoaded(i7, t7); }
+  i7.src = "broncos.jpg";
+  textures.push(t7);
 
-  textures.push(cube1Texture);
-  textures.push(cube2Texture);
+  t8 = gl.createTexture();
+  i8 = new Image();
+  i8.onload = function() { handleTextureLoaded(i8, t8); }
+  i8.src = "chargers.jpg";
+  textures.push(t8);
 
+  //AFC North
+  t9 = gl.createTexture();
+  i9 = new Image();
+  i9.onload = function() { handleTextureLoaded(i9, t9); }
+  i9.src = "steelers.jpg";
+  textures.push(t9);
+
+  t10 = gl.createTexture();
+  i10 = new Image();
+  i10.onload = function() { handleTextureLoaded(i10, t10); }
+  i10.src = "ravens.jpeg";
+  textures.push(t10);
+
+  t11 = gl.createTexture();
+  i11 = new Image();
+  i11.onload = function() { handleTextureLoaded(i11, t11); }
+  i11.src = "bengals.png";
+  textures.push(t11);
+
+  t12 = gl.createTexture();
+  i12 = new Image();
+  i12.onload = function() { handleTextureLoaded(i12, t12); }
+  i12.src = "browns.png";
+  textures.push(t12);
+
+  //AFC South
+  t13 = gl.createTexture();
+  i13 = new Image();
+  i13.onload = function() { handleTextureLoaded(i13, t13); }
+  i13.src = "texans.jpg";
+  textures.push(t13);
+
+  t14 = gl.createTexture();
+  i14 = new Image();
+  i14.onload = function() { handleTextureLoaded(i14, t14); }
+  i14.src = "titans.jpg";
+  textures.push(t14);
+
+  t15 = gl.createTexture();
+  i15 = new Image();
+  i15.onload = function() { handleTextureLoaded(i15, t15); }
+  i15.src = "colts.jpeg";
+  textures.push(t15);
+
+  t16 = gl.createTexture();
+  i16 = new Image();
+  i16.onload = function() { handleTextureLoaded(i16, t16); }
+  i16.src = "jaguars.jpeg";
+  textures.push(t16);
+
+  //NFC East
+  t17 = gl.createTexture();
+  i17 = new Image();
+  i17.onload = function() { handleTextureLoaded(i17, t17); }
+  i17.src = "cowboys.jpg";
+  textures.push(t17);
+
+  t18 = gl.createTexture();
+  i18 = new Image();
+  i18.onload = function() { handleTextureLoaded(i18, t18); }
+  i18.src = "giants.png";
+  textures.push(t18);
+
+  t19 = gl.createTexture();
+  i19 = new Image();
+  i19.onload = function() { handleTextureLoaded(i19, t19); }
+  i19.src = "redskins.jpg";
+  textures.push(t19);
+
+  t20 = gl.createTexture();
+  i20 = new Image();
+  i20.onload = function() { handleTextureLoaded(i20, t20); }
+  i20.src = "eagles.png";
+  textures.push(t20);
+
+  //NFC West
+  t21 = gl.createTexture();
+  i21 = new Image();
+  i21.onload = function() { handleTextureLoaded(i21, t21); }
+  i21.src = "seahawks.jpg";
+  textures.push(t21);
+
+  t22 = gl.createTexture();
+  i22 = new Image();
+  i22.onload = function() { handleTextureLoaded(i22, t22); }
+  i22.src = "cardinals.png";
+  textures.push(t22);
+
+  t23 = gl.createTexture();
+  i23 = new Image();
+  i23.onload = function() { handleTextureLoaded(i23, t23); }
+  i23.src = "rams.png";
+  textures.push(t23);
+
+  t24 = gl.createTexture();
+  i24 = new Image();
+  i24.onload = function() { handleTextureLoaded(i24, t24); }
+  i24.src = "49ers.png";
+  textures.push(t24);
+
+  //NFC North
+  t25 = gl.createTexture();
+  i25 = new Image();
+  i25.onload = function() { handleTextureLoaded(i25, t25); }
+  i25.src = "greenbay.png";
+  textures.push(t25);
+
+  t26 = gl.createTexture();
+  i26 = new Image();
+  i26.onload = function() { handleTextureLoaded(i26, t26); }
+  i26.src = "lions.png";
+  textures.push(t26);
+
+  t27 = gl.createTexture();
+  i27 = new Image();
+  i27.onload = function() { handleTextureLoaded(i27, t27); }
+  i27.src = "vikings.jpg";
+  textures.push(t27);
+
+  t28 = gl.createTexture();
+  i28 = new Image();
+  i28.onload = function() { handleTextureLoaded(i28, t28); }
+  i28.src = "bears.png";
+  textures.push(t28);
+
+  //NFC South
+  t29 = gl.createTexture();
+  i29 = new Image();
+  i29.onload = function() { handleTextureLoaded(i29, t29); }
+  i29.src = "falcons.jpg";
+  textures.push(t29);
+
+  t30 = gl.createTexture();
+  i30 = new Image();
+  i30.onload = function() { handleTextureLoaded(i30, t30); }
+  i30.src = "bucs.jpg";
+  textures.push(t30);
+
+  t31 = gl.createTexture();
+  i31 = new Image();
+  i31.onload = function() { handleTextureLoaded(i31, t31); }
+  i31.src = "saints.jpg";
+  textures.push(t31);
+
+  t32 = gl.createTexture();
+  i32 = new Image();
+  i32.onload = function() { handleTextureLoaded(i32, t32); }
+  i32.src = "panthers.jpg";
+  textures.push(t32);
 }
-
 
 function handleTextureLoaded(image, texture) {
   gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -449,9 +601,6 @@ function animate(time){
           prevRot = rotDeg;
         }
 
-
-      
-
         //Set model matrix to be product of translation, scaling, and rotation 
         mo_matrix = mat4();
         mo_matrix = mult(mo_matrix, trans);
@@ -459,17 +608,14 @@ function animate(time){
         if (rotateCubes){
           mo_matrix = mult(mo_matrix, rotateMatrix);  
         }
-        //mo_matrix = mult(mo_matrix, rotateMatrix);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, cubeVerticesTextureCoordBuffer);
         gl.vertexAttribPointer(textureCoordAttribute, 2, gl.FLOAT, false, 0, 0);
         gl.activeTexture(gl.TEXTURE0);
 
         //CHANGE THIS 
-        gl.bindTexture(gl.TEXTURE_2D, textures[0]);
+        gl.bindTexture(gl.TEXTURE_2D, textures[i]);
         gl.uniform1i(gl.getUniformLocation(program, "uSampler"), 0);
-
-        //NEW
 
         gl.uniformMatrix3fv(_Nmatrix , false, flatten(toMat3(transpose(inverse(mo_matrix)))));
 
