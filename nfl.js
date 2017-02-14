@@ -12,6 +12,13 @@ var projectionMatrixLoc, viewMatrixLoc, modelMatrixLoc;
 //Viewing:
 var fov;
 
+//Location:
+//var xMove = [-8,-6,-4,-2,0,2,4,6,-8,-6,-4,-2,0,2,4,6,-8,-6,-4,-2,0,2,4,6,-8,-6,-4,-2,0,2,4,6];
+var xMove = [-20,-15,-10,-5,5,10,15,20,-20,-15,-10,-5,5,10,15,20,-20,-15,-10,-5,5,10,15,20,-20,-15,-10,-5,5,10,15,20]
+var yMove = [10,10,10,10,10,10,10,10,5,5,5,5,5,5,5,5,-5,-5,-5,-5,-5,-5,-5,-5,-10,-10,-10,-10,-10,-10,-10,-10];
+var zMove = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
+
 window.onload = function init(){
   //create a canvas
   canvas = document.getElementById('gl-canvas');
@@ -30,7 +37,7 @@ window.onload = function init(){
 
   fov = 45;
   projectionMatrix = perspective(fov, canvas.width/canvas.height, 1, 100);
-  viewMatrix = translate(0,0,-20);
+  viewMatrix = translate(0,0,-70);
 
 
   render();
@@ -181,13 +188,15 @@ function render(){
 	gl.vertexAttribPointer(normalAttribute, 3, gl.FLOAT, false, 0, 0);
 	gl.enableVertexAttribArray(normalAttribute);*/
 
-	modelMatrix = mat4();
-	gl.uniformMatrix4fv(modelMatrixLoc, false, flatten(modelMatrix));
+	//modelMatrix = mat4();
+	for (var i = 0; i < 32; i++){
+		modelMatrix = translate(xMove[i], yMove[i], zMove[i]);
+		gl.uniformMatrix4fv(modelMatrixLoc, false, flatten(modelMatrix));
 
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-	//Draw cube
-	gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
-
+		//Draw cube
+		gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
+	}
 
 }
