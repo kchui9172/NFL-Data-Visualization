@@ -8,11 +8,9 @@ var vertex_buffer;
 var index_buffer;
 var normal_buffer;
 
-//Color related
-var cubeColor;
-var cube1Texture, cube2Texture;
-var cube1Image, cube2Image;
+//Attributes and texture related
 var textureCoordAttribute;
+var textures = [];
 var normalAttribute;
 
 //Model view and projection matrices
@@ -23,19 +21,19 @@ var mo_matrix;
 var proj_matrix;
 var view_matrix;
 
+//Rotation related
 var rotateCubes;
-var fov;
-
-//Preset translation, scale, and rotation axis for each cube 
-var xMove = [-40,-30,-20,-10,10,20,30, 40,-40,-30,-20,-10,10,20,30, 40,-40,-30,-20,-10,10,20,30, 40,-40,-30,-20,-10,10,20,30, 40];
-var yMove = [20,20,20,20,20,20,20,20,10,10,10,10,10,10,10,10,-10,-10,-10,-10,-10,-10,-10,-10,-20,-20,-20,-20,-20,-20,-20,-20];
-var zMove = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-
-var scaleVals = new Array(32);
-
 var prevTime = 0;
 var prevRot = 0;
 
+//Translation and scaling
+var xMove = [-40,-30,-20,-10,10,20,30, 40,-40,-30,-20,-10,10,20,30, 40,-40,-30,-20,-10,10,20,30, 40,-40,-30,-20,-10,10,20,30, 40];
+var yMove = [20,20,20,20,20,20,20,20,10,10,10,10,10,10,10,10,-10,-10,-10,-10,-10,-10,-10,-10,-20,-20,-20,-20,-20,-20,-20,-20];
+var zMove = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+var scaleVals = new Array(32);
+
+
+//Data related
 var teamNames = ["Arizona Cardinals","Atlanta Falcons","Baltimore Ravens", "Buffalo Bills",
 "Carolina Panthers", "Chicago Bears", "Cincinnati Bengals", "Cleveland Browns","Dallas Cowboys",
 "Denver Broncos", "Detroit Lions", "Green Bay Packers", "Houston Texans", "Indianapolis Colts",
@@ -440,6 +438,7 @@ window.onload = function init(){
   gl = canvas.getContext('experimental-webgl');
   if ( !gl ) { alert( "WebGL isn't available" ); }
 
+  //process data
   processData();
 
   //set buffers
@@ -453,10 +452,10 @@ window.onload = function init(){
   //Set orthographic projection of cross hair to be initially off
   rotateCubes = false;
 
-  //Initial Matrices
+  //Initial view
   fov = 50;
   proj_matrix = perspective(fov,canvas.width/canvas.height,1, 100);
-  view_matrix = translate(0,0,-60);
+  view_matrix = translate(0,0,-75);
 
   //Handle keyboard inputs 
   document.onkeydown = handleKeyDown;
@@ -464,14 +463,17 @@ window.onload = function init(){
   render(); 
 }
 
+//Pulls out rankings of each team and saves into array
 function processData(){
   for (var i = 0; i < 32; i++){
   	var team = teamNames[i];
+  	//associate team number with team's rank
   	ranking[parseInt(data[team]["NUM"])] = parseInt(data[team]["RNK"]);
   }
   sortRanks();
 }
 
+//Sorts ranking and save as sorted array
 function sortRanks(){
 	var temp = ranking;
 	var initValue = 4.2;
@@ -484,9 +486,9 @@ function sortRanks(){
 				index = i;
 			}
 		}
-		temp[index] = 100000;
+		temp[index] = 100000; //max out so won't pick this team again
 		sortedTeams[j] = index;
-		scaleVals[j] = initValue;
+		scaleVals[j] = initValue; //set scale value based on rank
 		initValue -= .1;
 	  }
 }
@@ -502,31 +504,24 @@ function initializeShaders(){
    _Pmatrix = gl.getUniformLocation(program, "Pmatrix");
    _Vmatrix = gl.getUniformLocation(program, "Vmatrix");
    _Mmatrix = gl.getUniformLocation(program, "Mmatrix");
-
-   //NEW
    _Nmatrix = gl.getUniformLocation(program, "normalMatrix");
-   //directionVecLoc = gl.getUniformLocation(program,"directionalVector");
 
-   //Bind vertext buffer with position attribute 
+   //Bind vertex buffer with position attribute 
    gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
    var _position = gl.getAttribLocation(program, "position");
    gl.vertexAttribPointer(_position, 3, gl.FLOAT, false,0,0);
    gl.enableVertexAttribArray(_position); 
 
+   //Attributes
    textureCoordAttribute = gl.getAttribLocation(program, "aTextureCoord");
    gl.enableVertexAttribArray(textureCoordAttribute);
 
-   //NEW
    normalAttribute = gl.getAttribLocation(program, "normal");
    gl.enableVertexAttribArray(normalAttribute);
 }
 
 
 function initializeBuffers(){
-  //Define and store geometry
-  //var vertices = [-2,2,2, -2,-2,2, 2,2,2, 2,-2,2, 
-  //  -2,2,-2, -2,-2,-2, 2,2,-2, 2,-2,-2 ];
-
   var vertices = [
     // Front face
     -1.0, -1.0,  1.0,
@@ -651,21 +646,6 @@ function initializeBuffers(){
     20, 21, 22,     20, 22, 23    // left
   ];
 
-  //indices = [2,0,1,5,3,7,6,5,4,0,6,2,3,1];
-
-  //Edges defined for white outline of cubes 
-  /*edges = [0,1, 1,3, 3,2, 2,0, 
-  2,6, 6,7, 7,3, 4,6, 4,5, 5,7, 0,4, 1,5];*/
-
-  //Make 8 color arrays so that each cube is a different color 
-  var colorChoices = [[0.3,1,1], [0,0,1]];
-
-
-  //Generate color matrix for each color
-  cubeColor = Array(2);
-  for (var i = 0; i < 2; i++){
-    cubeColor[i] = fillColorArray(colorChoices[i]);
-  }
 
   // Create and store data into vertex buffer
   vertex_buffer = gl.createBuffer ();
@@ -685,34 +665,6 @@ function initializeBuffers(){
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 }
-
-//Function to create color matrix for each cube 
-function fillColorArray(c){
-  var temp = c;
-  for (var i = 0; i < 23; i++){
-    c = c.concat(temp);
-  }
-  return c;
-}
-  
-
-var imageFiles = ["texans.jpg", "vikings.jpg"];
-var textures = [];
-var images = [];
-
-
-function createImages(){
-  console.log("what");
-  for (var i = 0; i <2 ;i++){
-    var im = new Image();
-    im.onload = function(){
-      console.log("wha");
-      images.push(im);      
-    }
-    im.src = imageFiles[i];
-  }
-}
-
 
 function initializeTextures(){
   //AFC East
@@ -954,7 +906,7 @@ function handleKeyDown(event){
   else if (String.fromCharCode(event.keyCode) == "S"){
 	fov = 50;
 	proj_matrix = perspective(fov,canvas.width/canvas.height,1, 100);
-	view_matrix = translate(0,0,-50);	
+	view_matrix = translate(0,0,-75);	
   }
   //move up
   else if (event.keyCode == '38'){
@@ -973,6 +925,7 @@ function handleKeyUp(event) {
   currentlyPressedKeys[event.keyCode] = false;
 }
 
+//Find rank of team
 function findRank(pos){
 	for (var i = 0; i < 32; i++){
 		if (sortedTeams[i] == pos){
@@ -1023,12 +976,8 @@ function animate(time){
           prevTime = currTime;
 
           //calculate number of degrees to rotate since last rendering
-          if ( i == 0){ //first cube rotates at 20 RPM
-            var degreesRotated = progress * 0.12;
-          }
-          else{ //second cube rotates at 30 RPM
-            var degreesRotated = progress * 0.18;  
-          }
+          //rotate at 20 RPM
+          var degreesRotated = progress * 0.12;
           rotDeg = degreesRotated + prevRot;
 
           var rotateMatrix = rotate(prevRot, [0,1,0]);
@@ -1036,15 +985,14 @@ function animate(time){
         }
 
         mo_matrix = mat4();
-
         //Set model matrix to be product of translation, scaling, and rotation 
         mo_matrix = mult(mo_matrix, trans);
 
-        //Need to find size to scale
+        //Need to find size to scale cube based on ranking
         var s = findRank(i);
-
         mo_matrix = mult(mo_matrix, scalem(scaleVals[s],scaleVals[s],scaleVals[s]));
 
+        //if want to rotate, multiply by rotation matrix
         if (rotateCubes){
           mo_matrix = mult(mo_matrix, rotateMatrix);  
         }
@@ -1053,7 +1001,6 @@ function animate(time){
         gl.vertexAttribPointer(textureCoordAttribute, 2, gl.FLOAT, false, 0, 0);
         gl.activeTexture(gl.TEXTURE0);
 
-        //CHANGE THIS 
         gl.bindTexture(gl.TEXTURE_2D, textures[i]);
         gl.uniform1i(gl.getUniformLocation(program, "uSampler"), 0);
 

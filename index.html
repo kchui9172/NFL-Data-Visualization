@@ -19,12 +19,12 @@
          varying vec3 v_surfaceToLight;
 
          void main(void) {
-			highp vec4 texelColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+			highp vec4 texelColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t)); //Apply textures
 			gl_FragColor = vec4(texelColor.rgb, texelColor.a);
 
 			vec3 normal = normalize(v_normal);
-			vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
-			float light = dot(normal, surfaceToLightDirection);
+			vec3 surfaceToLightDirection = normalize(v_surfaceToLight); 
+			float light = dot(normal, surfaceToLightDirection); //have point lighting
 			gl_FragColor.rgb *= light;
          }
       </script>
@@ -67,5 +67,34 @@
       <canvas width = "1250" height = "600" id = "my_Canvas">
          Oops ... your browser doesn't support the HTML5 canvas element
       </canvas>
+
+      <div id = "controls"> <center>
+      <h3> Controls </h3>
+		r = turn rotation of cubes on/off </br>
+		i = move in </br>
+		j = move left </br>
+		k = move right</br>
+		m = move back</br>
+		up arrow = move up</br>
+		down arrow = move down</br>
+		s = reset view</br>
+      </center> 
+  	</div>
+      </hr>
+
+    <div id ="legend"> <center>
+      <h3> Legend </h3>
+      AFC East: top left quadrant, top row</br>
+      AFC West: top right quadrant, top row</br>	
+      AFC North: top left quadrant, bottom row</br>	
+      AFC South: top right quadrant, bottom row</br>	
+  		</br>
+      NFC East: bottom left, top row</br>
+      NFC West: bottom right, top row</br>	
+      NFC North: bottom left, bottom row</br>	
+      NFC South: bottom right, bottom row</br>		
+     </center>
+ </div>
+
    </body>
 </html> 
