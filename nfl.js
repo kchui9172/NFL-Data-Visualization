@@ -439,7 +439,7 @@ window.onload = function init(){
   if ( !gl ) { alert( "WebGL isn't available" ); }
 
   //process data
-  processData();
+  processData("RNK");
 
   //set buffers
   initializeBuffers();
@@ -464,11 +464,11 @@ window.onload = function init(){
 }
 
 //Pulls out rankings of each team and saves into array
-function processData(){
+function processData(val){
   for (var i = 0; i < 32; i++){
   	var team = teamNames[i];
   	//associate team number with team's rank
-  	ranking[parseInt(data[team]["NUM"])] = parseInt(data[team]["RNK"]);
+  	ranking[parseInt(data[team]["NUM"])] = parseInt(data[team][val]);
   }
   sortRanks();
 }
@@ -908,6 +908,52 @@ function handleKeyDown(event){
 	proj_matrix = perspective(fov,canvas.width/canvas.height,1, 100);
 	view_matrix = translate(0,0,-75);	
   }
+
+  /*------- WAY TO DISPLAY DIFFERENT RANKING SYSTEMS --------- */
+  //bang for buck
+  else if (String.fromCharCode(event.keyCode) == "W"){
+    processData("RNK");
+  }
+  //bang for buck
+  else if (String.fromCharCode(event.keyCode) == "B"){
+    processData("BNG");
+  }
+  //fan relationship
+  else if (String.fromCharCode(event.keyCode) == "F"){
+    processData("FRL");
+  }
+  //ownership
+  else if (String.fromCharCode(event.keyCode) == "O"){
+    processData("OWN");
+  }
+
+  //affordability
+  else if (String.fromCharCode(event.keyCode) == "A"){
+    processData("AFF");
+  }
+
+  //stadium experience
+  else if (String.fromCharCode(event.keyCode) == "X"){
+    processData("STX");
+  }
+  //players
+  else if (String.fromCharCode(event.keyCode) == "P"){
+    processData("PLA");
+  }
+  //coaching
+  else if (String.fromCharCode(event.keyCode) == "C"){
+    processData("CCH");
+  }
+  //title track
+  else if (String.fromCharCode(event.keyCode) == "T"){
+    processData("TTR");
+  }
+
+
+
+
+
+
   //move up
   else if (event.keyCode == '38'){
     view_matrix = mult(view_matrix, translate(0,-.25,0));
