@@ -977,3 +977,13 @@ function normalMatrix(m, flag)
     }
 
 }
+
+function toMat3( mat4_affine )    // Slice off the 4th row and column of a matrix
+    {
+        var m = [];
+        m.push( mat4_affine[0].slice( 0, 3 ) );
+        m.push( mat4_affine[1].slice( 0, 3 ) );
+        m.push( mat4_affine[2].slice( 0, 3 ) );
+        m.matrix = true;
+        return m;
+    }
