@@ -415,7 +415,7 @@ var data ={
       "PLA": 100,
       "CCH": 44,
       "TTR": 105,
-      "NUM": 4
+      "NUM": 3
    },
    "Oakland Raiders": {
       "RNK": 119,
@@ -469,28 +469,26 @@ function processData(){
   	var team = teamNames[i];
   	ranking[parseInt(data[team]["NUM"])] = parseInt(data[team]["RNK"]);
   }
-  console.log("ranking: ",ranking);
+  sortRanks();
+}
 
-//sort 
-var initValue = 4.2;
-  for (var j = 0; j < 32; j++){
-	var index = 0;
-	var value = ranking[0];
-	for (var i = 1; i < ranking.length; i++) {
-		if (ranking[i] < value) {
-			value = ranking[i];
-			index = i;
+function sortRanks(){
+	var temp = ranking;
+	var initValue = 4.2;
+	  for (var j = 0; j < 32; j++){
+		var index = 0;
+		var value = 10000;
+		for (var i = 0; i < temp.length; i++) {
+			if (temp[i] < value) {
+				value = temp[i];
+				index = i;
+			}
 		}
-	}
-	ranking[index] = 100000;
-	sortedTeams[j] = index;
-	scaleVals[j] = initValue;
-	initValue -= .1;
-  }
-
-  console.log("sorted:",sortedTeams);
-  console.log(scaleVals);
-
+		temp[index] = 100000;
+		sortedTeams[j] = index;
+		scaleVals[j] = initValue;
+		initValue -= .1;
+	  }
 }
 
 
@@ -975,6 +973,14 @@ function handleKeyUp(event) {
   currentlyPressedKeys[event.keyCode] = false;
 }
 
+function findRank(pos){
+	for (var i = 0; i < 32; i++){
+		if (sortedTeams[i] == pos){
+			return i;
+		}
+	}
+}
+
 //Function for drawing
 function render(){
   rotateMatrix = mat4();
@@ -1034,7 +1040,10 @@ function animate(time){
         //Set model matrix to be product of translation, scaling, and rotation 
         mo_matrix = mult(mo_matrix, trans);
 
-        mo_matrix = mult(mo_matrix, scalem(scaleVals[i],scaleVals[i],scaleVals[i]));
+        //Need to find size to scale
+        var s = findRank(i);
+
+        mo_matrix = mult(mo_matrix, scalem(scaleVals[s],scaleVals[s],scaleVals[s]));
 
         if (rotateCubes){
           mo_matrix = mult(mo_matrix, rotateMatrix);  
