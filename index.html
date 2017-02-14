@@ -1,17 +1,47 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-	<title>CS174A Midterm Hackathon</title>
-	<script type="text/javascript" src="nfl.js"></script>
-	<!--<script type="text/javascript" src="MV.js"></script>
-	<script type="text/javascript" src="initShaders.js"></script>
-	<script type="text/javascript" src="webgl-utils.js"></script>-->
-</head>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+		<title>CS174A Midterm Hackathon</title>
+		<script type="text/javascript" src="nfl.js"></script>
+		<script type="text/javascript" src="MV.js"></script>
+		<script type="text/javascript" src="initShaders.js"></script>
+		<script type="text/javascript" src="webgl-utils.js"></script>
 
-<body>
-<canvas id="gl-canvas" width="1200" height="512">
-	Oops ... your browser doesn't support the HTML5 canvas element
-</canvas>
-</body>
+		<!-- Fragment shader program -->
+		<script id="shader-fs" type="x-shader/x-fragment">
+		 precision mediump float;
+		 //varying vec3 vColor;
+
+		 void main(void) {
+		   //gl_FragColor = vec4(vColor, 1.0);
+		   gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+		 }
+		</script>
+
+		<!-- Vertex shader program -->
+		<script id="shader-vs" type="x-shader/x-vertex">
+		 uniform mat4 Pmatrix;
+		 uniform mat4 Vmatrix;
+		 uniform mat4 Mmatrix;
+
+		 //attribute vec3 color;
+		 attribute vec3 position;
+
+		 //varying vec3 vColor;
+
+
+		 void main(void) {
+		    gl_Position =  Pmatrix * Vmatrix * Mmatrix * vec4(position, 1.0);
+		    //vColor = color;
+		 }
+		</script>
+
+	</head>
+
+	<body>
+		<canvas id="gl-canvas" width="1200" height="512">
+			Oops ... your browser doesn't support the HTML5 canvas element
+		</canvas>
+	</body>
 </html>
